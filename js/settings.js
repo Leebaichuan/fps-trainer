@@ -76,8 +76,8 @@ const GameSettings = {
   STORAGE_KEY: 'fps-trainer-game',
 
   defaults: {
-    sensitivity: 1.0,        // mouse sensitivity multiplier
-    rawInput: false,         // pointer lock raw input (can feel floaty in browser)
+    sensitivity: 0.50,       // mouse sensitivity (Valorant-style, 0.01–3.00)
+    rawInput: true,          // pointer lock raw input — eliminates OS acceleration
     fov: 90,
     soundEnabled: true,
     soundVolume: 0.5,

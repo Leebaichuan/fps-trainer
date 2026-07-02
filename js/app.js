@@ -320,8 +320,8 @@ const App = {
     document.getElementById('btn-settings').addEventListener('click', () => this._openCrosshairPanel());
 
     // Sensitivity quick adjust in HUD
-    document.getElementById('btn-sens-up').addEventListener('click', () => this._adjustSens(0.05));
-    document.getElementById('btn-sens-down').addEventListener('click', () => this._adjustSens(-0.05));
+    document.getElementById('btn-sens-up').addEventListener('click', () => this._adjustSens(0.01));
+    document.getElementById('btn-sens-down').addEventListener('click', () => this._adjustSens(-0.01));
 
     // Stats panel
     document.getElementById('btn-stats-panel').addEventListener('click', () => this._showStats());
@@ -459,7 +459,7 @@ const App = {
    */
   _adjustSens(delta) {
     const gs = GameSettings.get();
-    const newSens = Utils.clamp(+(gs.sensitivity + delta).toFixed(2), 0.1, 5.0);
+    const newSens = Utils.clamp(+(gs.sensitivity + delta).toFixed(2), 0.01, 3.00);
     gs.sensitivity = newSens;
     GameSettings.save(gs);
     document.getElementById('hud-sens-val').textContent = newSens.toFixed(2);

@@ -41,7 +41,7 @@
       <div class="hud-right">
         <div class="hud-sens">
           <button class="hud-sens-btn" id="btn-sens-down" title="降低灵敏度">−</button>
-          <span class="hud-sens-val" id="hud-sens-val">1.00</span>
+          <span class="hud-sens-val" id="hud-sens-val">0.50</span>
           <button class="hud-sens-btn" id="btn-sens-up" title="提高灵敏度">+</button>
         </div>
         <span class="hud-timer" id="hud-timer">00:00</span>
@@ -108,14 +108,14 @@
       <div class="ch-section">
         <div class="ch-label">SENSITIVITY</div>
         <div class="setting-group">
-          <input type="range" id="ch-sensitivity" min="0.1" max="5" step="0.05" value="1">
-          <div class="range-labels"><span>0.1</span><span>1.0</span><span>3.0</span><span>5.0</span></div>
+          <input type="range" id="ch-sensitivity" min="0.01" max="3.00" step="0.01" value="0.50">
+          <div class="range-labels"><span>0.01</span><span>1.00</span><span>2.00</span><span>3.00</span></div>
         </div>
       </div>
       <div class="ch-toggles">
         <label class="ch-toggle"><input type="checkbox" id="ch-outline" checked> OUTLINE</label>
         <label class="ch-toggle"><input type="checkbox" id="ch-center-dot" checked> CENTER DOT</label>
-        <label class="ch-toggle" title="Locks cursor for raw mouse input. May feel different from desktop cursor."><input type="checkbox" id="ch-raw-input"> RAW INPUT</label>
+        <label class="ch-toggle" title="Raw mouse input eliminates OS acceleration. Recommended for best aim feel."><input type="checkbox" id="ch-raw-input" checked> RAW INPUT</label>
       </div>
       <div class="settings-actions">
         <button class="btn-primary" id="btn-ch-save">APPLY</button>

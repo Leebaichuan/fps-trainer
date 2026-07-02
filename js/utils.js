@@ -399,36 +399,14 @@ class TrainingModule {
     const sens = GameSettings.get().sensitivity;
 
     if (this._pointerLocked) {
-      // Pointer lock: raw movementX/Y deltas
+      // Pointer lock: raw movementX/Y deltas × sensitivity (Valorant-style)
       this._virtX += e.movementX * sens;
       this._virtY += e.movementY * sens;
     } else {
-      // Absolute mode: compute delta from raw position, apply sensitivity
+      // Fallback: absolute 1:1 cursor mapping (no delta drift, no inertia)
       const rect = this.canvas.getBoundingClientRect();
-      const rawX = e.clientX - rect.left;
-      const rawY = e.clientY - rect.top;
-
-      if (!this._rawInit) {
-        // First move — snap virtual cursor to mouse position
-        this._lastRawX = rawX;
-        this._lastRawY = rawY;
-        this._virtX = rawX;
-        this._virtY = rawY;
-        this._rawInit = true;
-      } else {
-        const dx = rawX - this._lastRawX;
-        const dy = rawY - this._lastRawY;
-        // Guard against large jumps (mouse left and re-entered)
-        if (Math.abs(dx) > 100 || Math.abs(dy) > 100) {
-          this._virtX = rawX;
-          this._virtY = rawY;
-        } else {
-          this._virtX += dx * sens;
-          this._virtY += dy * sens;
-        }
-        this._lastRawX = rawX;
-        this._lastRawY = rawY;
-      }
+      this._virtX = e.clientX - rect.left;
+      this._virtY = e.clientY - rect.top;
     }
 
     // Clamp virtual cursor to canvas bounds
@@ -455,11 +433,11 @@ class TrainingModule {
   }
 
   _requestPointerLock() {
-    if (!GameSettings.get().rawInput) return; // only if user enabled raw input
+    if (!GameSettings.get().rawInput) return;
     try {
       this.canvas.requestPointerLock();
     } catch (e) {
-      // Pointer lock not supported — fallback to absolute positioning
+      // Pointer lock not supported — fallback to 1:1 absolute positioning
     }
   }
 

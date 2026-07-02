@@ -103,15 +103,7 @@ class ClickingModule extends TrainingModule {
       }
     }
 
-    // Combo display
-    if (this.comboCount >= 3) {
-      ctx.fillStyle = '#ffa502';
-      ctx.font = 'bold 48px "Segoe UI", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.globalAlpha = 0.7;
-      ctx.fillText(`${this.comboCount}x`, w / 2, h / 2 + 80);
-      ctx.globalAlpha = 1;
-    }
+
   }
 
   onClick(x, y) {
