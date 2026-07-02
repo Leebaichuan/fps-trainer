@@ -629,7 +629,12 @@ body::before {
 
 .sens-input::-webkit-inner-spin-button,
 .sens-input::-webkit-outer-spin-button {
-  opacity: 1;
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.sens-input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 .range-labels {
