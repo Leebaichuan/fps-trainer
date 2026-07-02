@@ -45,7 +45,7 @@
           <button class="hud-sens-btn" id="btn-sens-up" title="提高灵敏度">+</button>
         </div>
         <span class="hud-timer" id="hud-timer">00:00</span>
-        <button class="btn-settings" id="btn-settings" title="准星设置">⚙</button>
+        <button class="btn-settings" id="btn-settings" title="准星设置">&#9881;</button>
       </div>
     </div>
     <canvas id="training-canvas"></canvas>
@@ -78,49 +78,52 @@
   <!-- 准星设置面板 -->
   <div id="crosshair-overlay" class="overlay hidden">
     <div class="crosshair-card">
-      <h2>// CROSSHAIR SETTINGS</h2>
+      <h2>准星设置</h2>
       <div class="ch-section">
-        <div class="ch-label">STYLE</div>
+        <div class="ch-label">样式</div>
         <div class="ch-preset-row" id="ch-styles"></div>
       </div>
       <div class="ch-section">
-        <div class="ch-label">COLOR</div>
+        <div class="ch-label">颜色</div>
         <div class="ch-color-row" id="ch-colors"></div>
       </div>
       <div class="ch-section ch-sliders">
         <div class="setting-group">
-          <label>SIZE</label>
+          <label>大小</label>
           <input type="range" id="ch-size" min="2" max="20" step="1" value="8">
         </div>
         <div class="setting-group">
-          <label>GAP</label>
+          <label>间距</label>
           <input type="range" id="ch-gap" min="0" max="12" step="0.5" value="3">
         </div>
         <div class="setting-group">
-          <label>THICKNESS</label>
+          <label>粗细</label>
           <input type="range" id="ch-thickness" min="0.5" max="6" step="0.5" value="1.5">
         </div>
         <div class="setting-group">
-          <label>OPACITY</label>
+          <label>不透明度</label>
           <input type="range" id="ch-opacity" min="0.2" max="1" step="0.05" value="0.9">
         </div>
       </div>
       <div class="ch-section">
-        <div class="ch-label">SENSITIVITY</div>
+        <div class="ch-label">灵敏度</div>
         <div class="setting-group">
-          <input type="range" id="ch-sensitivity" min="0.01" max="3.00" step="0.01" value="0.50">
+          <div class="sens-row">
+            <input type="range" id="ch-sensitivity" min="0.01" max="3.00" step="0.01" value="0.50">
+            <input type="number" class="sens-input" id="ch-sens-input" value="0.50" min="0.01" max="3.00" step="0.01">
+          </div>
           <div class="range-labels"><span>0.01</span><span>1.00</span><span>2.00</span><span>3.00</span></div>
         </div>
       </div>
       <div class="ch-toggles">
-        <label class="ch-toggle"><input type="checkbox" id="ch-outline" checked> OUTLINE</label>
-        <label class="ch-toggle"><input type="checkbox" id="ch-center-dot" checked> CENTER DOT</label>
-        <label class="ch-toggle" title="Raw mouse input eliminates OS acceleration. Recommended for best aim feel."><input type="checkbox" id="ch-raw-input" checked> RAW INPUT</label>
+        <label class="ch-toggle"><input type="checkbox" id="ch-outline" checked> 描边</label>
+        <label class="ch-toggle"><input type="checkbox" id="ch-center-dot" checked> 中心点</label>
+        <label class="ch-toggle" title="原始鼠标输入，消除系统加速度，推荐开启以获得最佳手感。"><input type="checkbox" id="ch-raw-input" checked> 原始输入</label>
       </div>
       <div class="settings-actions">
-        <button class="btn-primary" id="btn-ch-save">APPLY</button>
-        <button class="btn-secondary" id="btn-ch-close">CLOSE</button>
-        <button class="btn-ghost" id="btn-ch-reset">RESET</button>
+        <button class="btn-primary" id="btn-ch-save">应用</button>
+        <button class="btn-secondary" id="btn-ch-close">关闭</button>
+        <button class="btn-ghost" id="btn-ch-reset">重置</button>
       </div>
     </div>
   </div>
@@ -128,7 +131,7 @@
   <!-- 统计面板 -->
   <div id="stats-overlay" class="overlay hidden">
     <div class="stats-card">
-      <h2>📊 训练统计</h2>
+      <h2>训练统计</h2>
       <div id="stats-content"></div>
       <div class="stats-actions">
         <button class="btn-secondary" id="btn-stats-close">关闭</button>

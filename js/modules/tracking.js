@@ -227,8 +227,8 @@ class TrackingModule extends TrainingModule {
       },
       units: {
         accuracy: '%',
-        timeOnTarget: 's',
-        totalTime: 's',
+        timeOnTarget: '秒',
+        totalTime: '秒',
         frameAccuracy: '%',
       },
     };
@@ -244,8 +244,7 @@ class TrackingModule extends TrainingModule {
 }
 
 App.registerModule('tracking', {
-  name: 'TRACKING',
-  icon: '◎',
-  description: 'Smooth, reactive & strafe tracking. Keep your crosshair on target. Real-time accuracy %.',
+  name: '跟枪追踪',
+  description: '平滑、反应与横移跟枪训练。保持准星始终锁定目标，实时精度反馈。',
   ModuleClass: TrackingModule,
 });

@@ -603,10 +603,33 @@ body::before {
   margin: 16px 0;
 }
 
-.sens-display {
+.sens-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.sens-row label {
+  margin-bottom: 0 !important;
+  white-space: nowrap;
+}
+
+.sens-input {
+  width: 72px;
+  padding: 5px 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   color: var(--accent);
   font-family: var(--font-mono, 'Consolas', monospace);
-  margin-left: 6px;
+  font-size: 0.9rem;
+  text-align: center;
+  clip-path: polygon(0% 3px, 5px 0%, 100% 0%, 100% calc(100% - 3px), calc(100% - 5px) 100%, 0% 100%);
+}
+
+.sens-input::-webkit-inner-spin-button,
+.sens-input::-webkit-outer-spin-button {
+  opacity: 1;
 }
 
 .range-labels {

@@ -144,7 +144,7 @@ class GridshotModule extends TrainingModule {
     ctx.fillStyle = 'rgba(255,255,255,0.3)';
     ctx.font = '16px "Segoe UI", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(`${hitsPerMin} hits/min`, w / 2, h - 20);
+    ctx.fillText(`${hitsPerMin} 次/分钟`, w / 2, h - 20);
 
     // Combo
     if (this.combo >= 5) {
@@ -203,7 +203,7 @@ class GridshotModule extends TrainingModule {
         hits: '次',
         misses: '次',
         accuracy: '%',
-        maxCombo: 'x',
+        maxCombo: '连',
         hitsPerMin: '',
       },
     };
@@ -223,8 +223,7 @@ class GridshotModule extends TrainingModule {
 }
 
 App.registerModule('gridshot', {
-  name: 'GRIDSHOT',
-  icon: '▦',
-  description: 'Classic 1wall6targets. Grid-based random highlight. Speed, rhythm, raw clicks per minute.',
+  name: '网格射击',
+  description: '经典网格随机高亮训练。提升节奏感、点击速度与每分钟点击数。',
   ModuleClass: GridshotModule,
 });

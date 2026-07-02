@@ -202,8 +202,8 @@ class PrecisionModule extends TrainingModule {
         hits: '次',
         misses: '次',
         accuracy: '%',
-        maxStreak: 'x',
-        finalSize: 'px',
+        maxStreak: '连',
+        finalSize: '像素',
       },
     };
   }
@@ -221,8 +221,7 @@ class PrecisionModule extends TrainingModule {
 }
 
 App.registerModule('precision', {
-  name: 'PRECISION',
-  icon: '⊕',
-  description: 'Shrinking targets, moving dots & headshot line. The smaller it gets, the sharper you are.',
+  name: '精准定位',
+  description: '渐小目标、移动靶与爆头线。目标越小，枪法越精准。',
   ModuleClass: PrecisionModule,
 });

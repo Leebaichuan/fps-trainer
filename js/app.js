@@ -131,7 +131,10 @@ const App = {
     const curSens = GameSettings.get().sensitivity;
     html += '<div class="setting-divider"></div>';
     html += '<div class="setting-group">';
-    html += '<label>鼠标灵敏度 <span class="sens-display">' + curSens.toFixed(2) + '</span></label>';
+    html += '<div class="sens-row">';
+    html += '<label>鼠标灵敏度</label>';
+    html += '<input type="number" class="sens-input" id="setting-sens-input" value="' + curSens.toFixed(2) + '" min="0.01" max="3.00" step="0.01">';
+    html += '</div>';
     html += '<input type="range" id="setting-sensitivity" min="0.01" max="3.00" step="0.01" value="' + curSens + '">';
     html += '<div class="range-labels"><span>0.01</span><span>1.00</span><span>2.00</span><span>3.00</span></div>';
     html += '</div>';
@@ -139,12 +142,25 @@ const App = {
     this.el.settingsContent.innerHTML = html;
     this.el.settingsOverlay.classList.remove('hidden');
 
-    // Live update sensitivity display
+    // Bidirectional sync: slider ↔ number input
     const sensSlider = document.getElementById('setting-sensitivity');
-    const sensDisplay = document.querySelector('.sens-display');
-    if (sensSlider && sensDisplay) {
+    const sensInput = document.getElementById('setting-sens-input');
+    if (sensSlider && sensInput) {
       sensSlider.addEventListener('input', () => {
-        sensDisplay.textContent = parseFloat(sensSlider.value).toFixed(2);
+        sensInput.value = parseFloat(sensSlider.value).toFixed(2);
+      });
+      sensInput.addEventListener('input', () => {
+        let v = parseFloat(sensInput.value);
+        if (isNaN(v)) return;
+        v = Math.max(0.01, Math.min(3.00, v));
+        sensSlider.value = v;
+      });
+      sensInput.addEventListener('change', () => {
+        let v = parseFloat(sensInput.value);
+        if (isNaN(v)) v = curSens;
+        v = Math.max(0.01, Math.min(3.00, v));
+        sensInput.value = v.toFixed(2);
+        sensSlider.value = v;
       });
     }
     this.el.settingsOverlay.classList.remove('hidden');
@@ -230,7 +246,7 @@ const App = {
       const isBest = best && best[key] === val;
       html += `<div class="result-stat${isBest ? ' best' : ''}">`;
       html += `<div class="stat-value">${val}${result.units?.[key] || ''}</div>`;
-      html += `<div class="stat-label">${label}${isBest ? ' · BEST' : ''}</div>`;
+      html += `<div class="stat-label">${label}${isBest ? ' · 最佳' : ''}</div>`;
       html += '</div>';
     }
     html += '</div>';
@@ -385,14 +401,17 @@ const App = {
    */
   _syncCrosshairUI() {
     const cs = CrosshairSettings.get();
+    const gs = GameSettings.get();
     document.getElementById('ch-size').value = cs.size;
     document.getElementById('ch-gap').value = cs.gap;
     document.getElementById('ch-thickness').value = cs.thickness;
     document.getElementById('ch-opacity').value = cs.opacity;
     document.getElementById('ch-outline').checked = cs.outline;
     document.getElementById('ch-center-dot').checked = cs.centerDot;
-    document.getElementById('ch-sensitivity').value = GameSettings.get().sensitivity;
-    document.getElementById('ch-raw-input').checked = GameSettings.get().rawInput;
+    document.getElementById('ch-sensitivity').value = gs.sensitivity;
+    const sensInput = document.getElementById('ch-sens-input');
+    if (sensInput) sensInput.value = gs.sensitivity.toFixed(2);
+    document.getElementById('ch-raw-input').checked = gs.rawInput;
     this._updateChStyleUI(cs.style);
     this._updateChColorUI(cs.color);
   },
@@ -418,11 +437,11 @@ const App = {
     // Style buttons
     const styleRow = document.getElementById('ch-styles');
     const styles = [
-      { key: 'cross', label: 'Cross' },
-      { key: 'crossdot', label: 'Cross+' },
-      { key: 'dot', label: 'Dot' },
-      { key: 'circle', label: 'Circle' },
-      { key: 'crosscircle', label: 'Cross O' },
+      { key: 'cross', label: '十字' },
+      { key: 'crossdot', label: '十字+点' },
+      { key: 'dot', label: '圆点' },
+      { key: 'circle', label: '圆圈' },
+      { key: 'crosscircle', label: '十字+圈' },
     ];
     styles.forEach(s => {
       const btn = document.createElement('button');
@@ -456,8 +475,28 @@ const App = {
       document.getElementById(id).addEventListener('input', () => this._applyCrosshairSettings());
     });
 
-    // Sensitivity
-    document.getElementById('ch-sensitivity').addEventListener('input', () => this._applyCrosshairSettings());
+    // Sensitivity — bidirectional sync slider ↔ number input
+    const chSensSlider = document.getElementById('ch-sensitivity');
+    const chSensInput = document.getElementById('ch-sens-input');
+    chSensSlider.addEventListener('input', () => {
+      chSensInput.value = parseFloat(chSensSlider.value).toFixed(2);
+      this._applyCrosshairSettings();
+    });
+    chSensInput.addEventListener('input', () => {
+      let v = parseFloat(chSensInput.value);
+      if (isNaN(v)) return;
+      v = Math.max(0.01, Math.min(3.00, v));
+      chSensSlider.value = v;
+      this._applyCrosshairSettings();
+    });
+    chSensInput.addEventListener('change', () => {
+      let v = parseFloat(chSensInput.value);
+      if (isNaN(v)) { chSensInput.value = chSensSlider.value; return; }
+      v = Math.max(0.01, Math.min(3.00, v));
+      chSensInput.value = v.toFixed(2);
+      chSensSlider.value = v;
+      this._applyCrosshairSettings();
+    });
 
     // Toggles
     document.getElementById('ch-outline').addEventListener('change', () => this._applyCrosshairSettings());

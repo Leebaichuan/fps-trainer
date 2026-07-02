@@ -152,7 +152,7 @@ class ClickingModule extends TrainingModule {
         misses: '次',
         totalClicks: '次',
         accuracy: '%',
-        maxCombo: 'x',
+        maxCombo: '连',
         hitsPerMin: '',
       },
     };
@@ -169,8 +169,7 @@ class ClickingModule extends TrainingModule {
 }
 
 App.registerModule('clicking', {
-  name: 'FLICK',
-  icon: '⌖',
-  description: 'Static & dynamic dot clicking. Train flick accuracy, speed, and combo streaks.',
+  name: '瞬击',
+  description: '静态与动态点小球训练。提升甩枪精度、速度和连击能力。',
   ModuleClass: ClickingModule,
 });

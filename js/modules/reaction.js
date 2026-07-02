@@ -204,11 +204,11 @@ class ReactionModule extends TrainingModule {
         trials: '测试次数',
       },
       units: {
-        avgReaction: 'ms',
-        medianReaction: 'ms',
-        bestReaction: 'ms',
-        worstReaction: 'ms',
-        stdDev: 'ms',
+        avgReaction: '毫秒',
+        medianReaction: '毫秒',
+        bestReaction: '毫秒',
+        worstReaction: '毫秒',
+        stdDev: '毫秒',
         trials: '次',
       },
     };
@@ -223,8 +223,7 @@ class ReactionModule extends TrainingModule {
 }
 
 App.registerModule('reaction', {
-  name: 'REACTION',
-  icon: '⚡',
-  description: 'Visual trigger response. Color shift & target pop. Measure raw reaction time.',
+  name: '反应测试',
+  description: '视觉触发反应。颜色变化与目标出现，测量原始反应速度。',
   ModuleClass: ReactionModule,
 });

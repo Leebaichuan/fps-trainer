@@ -243,8 +243,7 @@ class SwitchingModule extends TrainingModule {
 }
 
 App.registerModule('switching', {
-  name: 'SWITCH',
-  icon: '⇄',
-  description: 'Rapid target switching. Dual & multi-target drills. Train flick-and-transfer speed.',
+  name: '目标切换',
+  description: '快速目标切换训练。双目标与多目标练习，提升甩枪转移速度。',
   ModuleClass: SwitchingModule,
 });
