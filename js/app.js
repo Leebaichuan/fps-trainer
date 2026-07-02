@@ -361,9 +361,7 @@ const App = {
     // Training HUD gear button → crosshair settings
     document.getElementById('btn-settings').addEventListener('click', () => this._openCrosshairPanel());
 
-    // Sensitivity quick adjust in HUD
-    document.getElementById('btn-sens-up').addEventListener('click', () => this._adjustSens(0.01));
-    document.getElementById('btn-sens-down').addEventListener('click', () => this._adjustSens(-0.01));
+
 
     // Stats panel
     document.getElementById('btn-stats-panel').addEventListener('click', () => this._showStats());
