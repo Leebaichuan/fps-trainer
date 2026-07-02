@@ -597,6 +597,18 @@ body::before {
   background: var(--bg-card);
 }
 
+.setting-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+.sens-display {
+  color: var(--accent);
+  font-family: var(--font-mono, 'Consolas', monospace);
+  margin-left: 6px;
+}
+
 .range-labels {
   display: flex;
   justify-content: space-between;

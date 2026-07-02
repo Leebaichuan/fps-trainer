@@ -74,7 +74,6 @@ const App = {
       card.dataset.module = mod.id;
       card.innerHTML = `
         <div class="card-id">// ${ids[i] || '00'} — training</div>
-        <div class="card-icon">${mod.icon}</div>
         <div class="card-title">${mod.name}</div>
         <div class="card-desc">${mod.description}</div>
         <div class="card-line"></div>
@@ -128,7 +127,26 @@ const App = {
       html += '</div>';
     });
 
+    // Global sensitivity setting
+    const curSens = GameSettings.get().sensitivity;
+    html += '<div class="setting-divider"></div>';
+    html += '<div class="setting-group">';
+    html += '<label>鼠标灵敏度 <span class="sens-display">' + curSens.toFixed(2) + '</span></label>';
+    html += '<input type="range" id="setting-sensitivity" min="0.01" max="3.00" step="0.01" value="' + curSens + '">';
+    html += '<div class="range-labels"><span>0.01</span><span>1.00</span><span>2.00</span><span>3.00</span></div>';
+    html += '</div>';
+
     this.el.settingsContent.innerHTML = html;
+    this.el.settingsOverlay.classList.remove('hidden');
+
+    // Live update sensitivity display
+    const sensSlider = document.getElementById('setting-sensitivity');
+    const sensDisplay = document.querySelector('.sens-display');
+    if (sensSlider && sensDisplay) {
+      sensSlider.addEventListener('input', () => {
+        sensDisplay.textContent = parseFloat(sensSlider.value).toFixed(2);
+      });
+    }
     this.el.settingsOverlay.classList.remove('hidden');
 
     // Save module ref for settings panel
@@ -212,7 +230,7 @@ const App = {
       const isBest = best && best[key] === val;
       html += `<div class="result-stat${isBest ? ' best' : ''}">`;
       html += `<div class="stat-value">${val}${result.units?.[key] || ''}</div>`;
-      html += `<div class="stat-label">${label}${isBest ? ' 🏆' : ''}</div>`;
+      html += `<div class="stat-label">${label}${isBest ? ' · BEST' : ''}</div>`;
       html += '</div>';
     }
     html += '</div>';
@@ -246,7 +264,7 @@ const App = {
     let html = '';
 
     if (activeMods.length === 0) {
-      html = '<p style="text-align:center;color:var(--text-muted);padding:20px;">暂无训练记录，快去练枪吧！🎯</p>';
+      html = '<p style="text-align:center;color:var(--text-muted);padding:20px;">暂无训练记录，快去练枪吧！</p>';
     } else {
       html = '<table class="stats-table"><thead><tr><th>模块</th><th>训练次数</th><th>最近训练</th></tr></thead><tbody>';
 
@@ -255,7 +273,7 @@ const App = {
         if (stats.totalPlays > 0) {
           const lastDate = stats.lastPlayed ? new Date(stats.lastPlayed).toLocaleDateString('zh-CN') : '-';
           html += `<tr>
-            <td>${mod.icon} ${mod.name}</td>
+            <td>${mod.name}</td>
             <td>${stats.totalPlays} 次</td>
             <td>${lastDate}</td>
           </tr>`;
@@ -291,6 +309,14 @@ const App = {
           settings[def.key] = val;
         }
       });
+
+      // Save sensitivity from settings panel
+      const sensSlider = document.getElementById('setting-sensitivity');
+      if (sensSlider) {
+        const gs = GameSettings.get();
+        gs.sensitivity = parseFloat(sensSlider.value);
+        GameSettings.save(gs);
+      }
 
       this.el.settingsOverlay.classList.add('hidden');
       this.startTraining(pending.mod, pending.instance, settings);
