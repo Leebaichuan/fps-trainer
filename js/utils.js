@@ -338,8 +338,9 @@ class TrainingModule {
     document.addEventListener('pointerlockchange', this._boundPointerLockChange);
     this._requestPointerLock();
 
+    this._lastTime = performance.now();
     this.onStart();
-    this._loop(performance.now());
+    this._loop(this._lastTime);
   }
 
   stop() {
