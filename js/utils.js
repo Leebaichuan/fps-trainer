@@ -218,12 +218,14 @@ const Utils = {
    */
   playBeep(freq = 800, duration = 80, type = 'sine') {
     try {
+      const sound = this._getSoundSettings();
+      if (!sound.enabled) return;
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = type;
       osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.setValueAtTime(0.15 * sound.volume, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration / 1000);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -234,10 +236,83 @@ const Utils = {
     }
   },
 
+  _getSoundSettings() {
+    try {
+      if (typeof GameSettings !== 'undefined') {
+        const settings = GameSettings.get();
+        return {
+          enabled: settings.soundEnabled !== false,
+          volume: this.clamp(Number(settings.soundVolume) || 0.5, 0, 1),
+        };
+      }
+    } catch (e) { /* ignore */ }
+    return { enabled: true, volume: 0.5 };
+  },
+
+  _playTone(ctx, options) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const start = ctx.currentTime + (options.delay || 0);
+    const end = start + options.duration;
+
+    osc.type = options.type;
+    osc.frequency.setValueAtTime(options.from, start);
+    if (options.to && options.to !== options.from) {
+      osc.frequency.linearRampToValueAtTime(options.to, end);
+    }
+
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.linearRampToValueAtTime(options.gain, start + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.001, end);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(start);
+    osc.stop(end);
+  },
+
+  /**
+   * Play an original tactical kill-confirm cue inspired by crisp FPS feedback.
+   */
+  playKill() {
+    try {
+      const sound = this._getSoundSettings();
+      if (!sound.enabled) return;
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const volume = sound.volume;
+
+      this._playTone(ctx, {
+        type: 'triangle',
+        from: 180,
+        to: 92,
+        duration: 0.11,
+        gain: 0.18 * volume,
+      });
+      this._playTone(ctx, {
+        type: 'square',
+        from: 1320,
+        to: 1760,
+        duration: 0.045,
+        delay: 0.018,
+        gain: 0.07 * volume,
+      });
+      this._playTone(ctx, {
+        type: 'sine',
+        from: 720,
+        to: 1180,
+        duration: 0.075,
+        delay: 0.038,
+        gain: 0.08 * volume,
+      });
+    } catch (e) {
+      // Silently fail if audio not available
+    }
+  },
+
   /**
    * Play hit sound
    */
-  playHit() { this.playBeep(1200, 50, 'square'); },
+  playHit() { this.playKill(); },
 
   /**
    * Play miss sound
