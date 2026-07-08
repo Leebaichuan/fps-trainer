@@ -128,7 +128,7 @@ const App = {
     });
 
     // Global sensitivity setting
-    const curSens = GameSettings.get().sensitivity;
+    const curSens = GameSettings.getSensitivity();
     html += '<div class="setting-divider"></div>';
     html += '<div class="setting-group">';
     html += '<div class="sens-row">';
@@ -152,15 +152,15 @@ const App = {
       sensInput.addEventListener('input', () => {
         let v = parseFloat(sensInput.value);
         if (isNaN(v)) return;
-        v = Math.max(0.01, Math.min(3.00, v));
-        sensSlider.value = v;
+        v = GameSettings.normalizeSensitivity(v);
+        sensSlider.value = v.toFixed(2);
       });
       sensInput.addEventListener('change', () => {
         let v = parseFloat(sensInput.value);
         if (isNaN(v)) v = curSens;
-        v = Math.max(0.01, Math.min(3.00, v));
+        v = GameSettings.normalizeSensitivity(v);
         sensInput.value = v.toFixed(2);
-        sensSlider.value = v;
+        sensSlider.value = v.toFixed(2);
       });
     }
     this.el.settingsOverlay.classList.remove('hidden');
@@ -207,7 +207,7 @@ const App = {
     this.el.hudStats.innerHTML = '';
 
     // Show current sensitivity in HUD
-    document.getElementById('hud-sens-val').textContent = GameSettings.get().sensitivity.toFixed(2);
+    document.getElementById('hud-sens-val').textContent = GameSettings.getSensitivity().toFixed(2);
 
     // Handle completion
     instance._onComplete = (result) => this._showResult(result, mod);
@@ -330,7 +330,7 @@ const App = {
       const sensSlider = document.getElementById('setting-sensitivity');
       if (sensSlider) {
         const gs = GameSettings.get();
-        gs.sensitivity = parseFloat(sensSlider.value);
+        gs.sensitivity = GameSettings.normalizeSensitivity(sensSlider.value);
         GameSettings.save(gs);
       }
 
@@ -406,7 +406,7 @@ const App = {
     document.getElementById('ch-opacity').value = cs.opacity;
     document.getElementById('ch-outline').checked = cs.outline;
     document.getElementById('ch-center-dot').checked = cs.centerDot;
-    document.getElementById('ch-sensitivity').value = gs.sensitivity;
+    document.getElementById('ch-sensitivity').value = gs.sensitivity.toFixed(2);
     const sensInput = document.getElementById('ch-sens-input');
     if (sensInput) sensInput.value = gs.sensitivity.toFixed(2);
     document.getElementById('ch-raw-input').checked = gs.rawInput;
@@ -483,16 +483,16 @@ const App = {
     chSensInput.addEventListener('input', () => {
       let v = parseFloat(chSensInput.value);
       if (isNaN(v)) return;
-      v = Math.max(0.01, Math.min(3.00, v));
-      chSensSlider.value = v;
+      v = GameSettings.normalizeSensitivity(v);
+      chSensSlider.value = v.toFixed(2);
       this._applyCrosshairSettings();
     });
     chSensInput.addEventListener('change', () => {
       let v = parseFloat(chSensInput.value);
       if (isNaN(v)) { chSensInput.value = chSensSlider.value; return; }
-      v = Math.max(0.01, Math.min(3.00, v));
+      v = GameSettings.normalizeSensitivity(v);
       chSensInput.value = v.toFixed(2);
-      chSensSlider.value = v;
+      chSensSlider.value = v.toFixed(2);
       this._applyCrosshairSettings();
     });
 
@@ -522,7 +522,7 @@ const App = {
    */
   _adjustSens(delta) {
     const gs = GameSettings.get();
-    const newSens = Utils.clamp(+(gs.sensitivity + delta).toFixed(2), 0.01, 3.00);
+    const newSens = GameSettings.normalizeSensitivity(gs.sensitivity + delta);
     gs.sensitivity = newSens;
     GameSettings.save(gs);
     document.getElementById('hud-sens-val').textContent = newSens.toFixed(2);
@@ -547,9 +547,11 @@ const App = {
     // Save sensitivity + rawInput
     GameSettings.save({
       ...GameSettings.get(),
-      sensitivity: Number(document.getElementById('ch-sensitivity').value),
+      sensitivity: GameSettings.normalizeSensitivity(document.getElementById('ch-sensitivity').value),
       rawInput: document.getElementById('ch-raw-input').checked,
     });
+    const hudSens = document.getElementById('hud-sens-val');
+    if (hudSens) hudSens.textContent = GameSettings.getSensitivity().toFixed(2);
   },
 };
 

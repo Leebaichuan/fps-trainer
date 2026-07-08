@@ -397,12 +397,12 @@ class TrainingModule {
   }
 
   _onMouseMove(e) {
-    const sens = GameSettings.get().sensitivity;
+    const sens = GameSettings.getSensitivity();
 
     if (this._pointerLocked) {
       // Pointer lock: raw movementX/Y deltas × sensitivity (Valorant-style)
-      this._virtX += e.movementX * sens;
-      this._virtY += e.movementY * sens;
+      this._virtX += GameSettings.applySensitivity(e.movementX || 0, sens);
+      this._virtY += GameSettings.applySensitivity(e.movementY || 0, sens);
     } else {
       // Fallback: absolute 1:1 cursor mapping (no delta drift, no inertia)
       const rect = this.canvas.getBoundingClientRect();
@@ -436,9 +436,24 @@ class TrainingModule {
   _requestPointerLock() {
     if (!GameSettings.get().rawInput) return;
     try {
-      this.canvas.requestPointerLock();
+      const lockAttempt = this.canvas.requestPointerLock({ unadjustedMovement: true });
+      if (lockAttempt && typeof lockAttempt.catch === 'function') {
+        lockAttempt.catch(() => {
+          if (document.pointerLockElement !== this.canvas) {
+            try {
+              this.canvas.requestPointerLock();
+            } catch (e) {
+              // Pointer lock not supported; fallback to 1:1 absolute positioning.
+            }
+          }
+        });
+      }
     } catch (e) {
-      // Pointer lock not supported — fallback to 1:1 absolute positioning
+      try {
+        this.canvas.requestPointerLock();
+      } catch (fallbackError) {
+        // Pointer lock not supported; fallback to 1:1 absolute positioning.
+      }
     }
   }
 

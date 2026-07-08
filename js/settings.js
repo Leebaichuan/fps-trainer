@@ -83,17 +83,41 @@ const GameSettings = {
     soundVolume: 0.5,
   },
 
+  normalizeSensitivity(value) {
+    const parsed = Number(value);
+    const fallback = this.defaults.sensitivity;
+    const next = Number.isFinite(parsed) ? parsed : fallback;
+    const clamped = Math.max(0.01, Math.min(3.00, next));
+    return Math.round(clamped * 100) / 100;
+  },
+
+  getSensitivity() {
+    return this.normalizeSensitivity(this.get().sensitivity);
+  },
+
+  applySensitivity(delta, sensitivity = this.getSensitivity()) {
+    const movement = Number(delta);
+    if (!Number.isFinite(movement)) return 0;
+    return movement * this.normalizeSensitivity(sensitivity);
+  },
+
   get() {
     try {
       const raw = localStorage.getItem(this.STORAGE_KEY);
-      if (raw) return { ...this.defaults, ...JSON.parse(raw) };
+      if (raw) {
+        const settings = { ...this.defaults, ...JSON.parse(raw) };
+        settings.sensitivity = this.normalizeSensitivity(settings.sensitivity);
+        return settings;
+      }
     } catch (e) { /* ignore */ }
     return { ...this.defaults };
   },
 
   save(settings) {
     try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(settings));
+      const normalized = { ...this.defaults, ...(settings || {}) };
+      normalized.sensitivity = this.normalizeSensitivity(normalized.sensitivity);
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(normalized));
     } catch (e) { /* ignore */ }
   },
 };
